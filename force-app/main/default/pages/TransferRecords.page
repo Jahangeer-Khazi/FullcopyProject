@@ -1,0 +1,20 @@
+<apex:page standardController="User" lightningStylesheets="true">
+    <apex:includeLightning />
+    
+    <div id="lightning"/>
+    <apex:includeScript value="/lightning/lightning.out.js" />
+
+<script>    
+       $Lightning.use("c:AssignRecordsApp", function() {
+            $Lightning.createComponent("c:AssignRecords",
+                    {
+                       recordId: '{!$CurrentPage.parameters.id}',
+                    },  
+                   "lightning",
+                    function(cmp) {
+                    console.log('Component created');
+                       
+                   });
+        });
+    </script>
+</apex:page>

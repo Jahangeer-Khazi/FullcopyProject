@@ -1,0 +1,16 @@
+<apex:page >
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+        $Lightning.use("c:WHJ_UserDeactApp", function() {
+          $Lightning.createComponent(
+              function(cmp) {
+                console.log("CMP was created");
+               
+              }
+          );
+        });
+    </script>
+</apex:page>

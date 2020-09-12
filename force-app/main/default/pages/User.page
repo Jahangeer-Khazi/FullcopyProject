@@ -1,0 +1,29 @@
+<apex:page controller="retrieveStageValue">
+
+   
+    <apex:form >
+    
+        <apex:sectionHeader title="User" subtitle="Deactivate User ?"/>
+        
+        <apex:pageblock >
+        
+            <apex:pageblocksection >
+            
+                <apex:pageblocksectionitem >
+                
+                    <apex:outputlabel value="Deactivate User ?"/>
+                    <apex:selectlist size="1">
+                    
+                        <apex:selectoptions value="{!oppst}" />
+                    
+                    </apex:selectlist>
+                
+                </apex:pageblocksectionitem>
+            
+            </apex:pageblocksection>
+        
+        </apex:pageblock>
+    
+    </apex:form>
+
+</apex:page>

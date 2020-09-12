@@ -1,0 +1,50 @@
+<!--
+  @File Name          : wHJ_PartPayment.html
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 11/12/2019, 10:58:19 AM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    11/7/2019   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<template>
+    <lightning-card title="Payment Details">
+            <div class="slds-m-left_x-small">
+                    <lightning-input type="checkbox" label="Part Payment" checked={checkitem} onchange={showcomphandle}></lightning-input>
+            </div>
+    <template if:true={showcomponent}>
+        <template for:each={wizard} for:item="wiz" for:index="idx">
+            <div key={wiz} class="slds-grid slds-gutters" style="margin:1rem;">
+                <div class="slds-col">
+                    <lightning-input data-index={idx} type ="number" value={wiz.pamount} name="input1" label="Amount" onchange={captureValue} ></lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input data-index={idx} type="date"  name="input2" value={wiz.paydate}  label="Date" onchange={captureValue} ></lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input data-index={idx} type ="number" name="input3" value={wiz.cre}  label="Credit" onchange={captureValue} ></lightning-input>
+                </div>
+                <br/>
+                <div class="slds-text-body_small slds-text-color_error" style="float: right;">
+                <template if:true={showLoadingSpinner}>
+                    <lightning-spinner alternative-text="Uploading......" size="medium"></lightning-spinner>
+                </template>
+                </div>
+                <div class="slds-col slds-p-top_large">
+                    <lightning-button-icon icon-name="utility:add"  size="large"    variant="bare"  onclick={Add} class="slds-m-left_x-small"></lightning-button-icon>
+                </div>
+                <div class="slds-col slds-p-top_large">
+                    <lightning-button-icon  icon-name="utility:delete"  size="large"  value={idx}  variant="bare" onclick={del} class="slds-m-left_x-small"></lightning-button-icon>
+                </div>
+            </div>
+        </template><br>
+        <template if:true={checkDisabled}>
+
+    <lightning-button variant="brand" label="Submit" title="Submit" 
+    style="float: right;margin-top: -1.5rem;margin-right: 1rem;"
+    onclick={handleClick}  class="slds-m-right_x-small"></lightning-button></template>
+</template>
+</lightning-card>
+</template>

@@ -1,0 +1,20 @@
+<apex:page standardController="User" lightningStylesheets="true">
+    <apex:includeLightning />
+    
+    <div id="lightning"/>
+    <apex:includeScript value="/lightning/lightning.out.js" />
+
+<script>    
+       $Lightning.use("c:WHJ_UserDeactApp", function() {
+            $Lightning.createComponent("c:WHJ_UserDeactivate",
+                    {
+                       recordId: '{!$CurrentPage.parameters.id}',
+                    },  
+                   "lightning",
+                    function(cmp) {
+                    console.log('Component created');
+                       
+                   });
+        });
+    </script>
+</apex:page>

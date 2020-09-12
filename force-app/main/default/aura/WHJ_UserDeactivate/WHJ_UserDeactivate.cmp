@@ -1,0 +1,100 @@
+<aura:component implements="force:lightningQuickAction,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId"  controller="WHJ_UserDeactivateCtrl">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="blnShowModule" type="Boolean" default="false"/>
+    <aura:attribute name="buttonValue" type="String" default="IJMRecommended"/>
+    <aura:attribute name="ObjMessage" type="Object" access="private"/>
+    <aura:attribute name="isActive" type="Boolean"/>
+    <aura:attribute name="blnClassic" type="Boolean" default="false"/>
+    <aura:attribute name="strTheme" type="String"/>
+    <aura:attribute name="conObj" type="Contact" access="private"/>
+    <aura:attribute name="options" type="List" default="[{'label': 'IJM Recommended', 'value': 'IJMRecommended'},
+                                                        {'label': 'Not Recommended', 'value': 'NotRecommended'}]"/>
+    <div class="slds-m-around--small slds-hide" aura:id="uiMessage">
+        <ui:message title="{!v.ObjMessage.title}" severity="{!v.ObjMessage.severity}" closable="{!v.ObjMessage.isClosable}">
+            <aura:unescapedHtml value="{!v.ObjMessage.message}"/>
+        </ui:message>
+    </div>
+    <aura:if isTrue="{!v.blnShowModule}">
+        <div style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{! c.closeModal }"
+                                              alternativeText="Close" class="slds-modal__close" />
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"></h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <aura:if isTrue="{!v.isActive}">
+                        	<p>Are you sure?</p>
+                        </aura:if>
+                        <aura:set attribute="else">
+							<p>This user is already deactivated.</p>
+                        </aura:set>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning:button class="slds-button slds-button_neutral" label="Cancel" onclick="{!c.closeModal}"/>
+                        <lightning:button variant="brand" label="Deactivate User" title="Deactivate User" onclick="{! c.onClickConfirmDeactivate }"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isActive}">
+        <div role="dialog" tabindex="-1" aria-labelledby="header43" aura:id="Modalbox" class="slds-modal"/>
+        <div class="slds-p-around_medium">
+            <fieldset class="slds-box slds-theme--default slds-container--small">
+                <legend id="userform" class="slds-text-heading--small 
+                                             slds-p-vertical--medium">
+                    Deactivate User
+                </legend>
+                <form class="slds-form--stacked">
+                    <div class="slds-align_absolute-center">
+                        <lightning:radioGroup name="radioButtonGroup"
+                                              options="{! v.options }"
+                                              value="{! v.buttonValue }"
+                                              type="button"/>
+                    </div>
+                    <div class="slds-align_absolute-center">
+                        <lightning:button label="Cancel" 
+                                          class="slds-m-top--medium"
+                                          variant="neutral"
+                                          onclick="{!c.clickCancel}"/>
+                        
+                        <lightning:button label="Ok"  title = "OK"
+                                          class="slds-m-top--medium"
+                                          variant="brand"
+                                          onclick="{!c.clickOk}"/>
+                    </div>
+                </form>
+            </fieldset>
+        </div>
+    </aura:if>
+    <!--<aura:if isTrue="{!and(not(empty(v.isActive),!v.isActive, not(empty(v.blnClassic)), v.blnClassic))}">
+        <div style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{! c.clickCancel }"
+                                              alternativeText="Close" class="slds-modal__close" />
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"></h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p>This user is already deactivated.</p>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning:button class="slds-button slds-button_neutral" label="OK" onclick="{!c.clickCancel}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>-->
+    <aura:if isTrue="{!and(!v.isActive,  not(empty(v.isActive)), not(empty(v.blnClassic)), !v.blnClassic)}">
+    	<p class="slds-p-top_medium" style="color: green;">This user is already deactivated.</p>
+        <div class="slds-p-top_medium">
+        	<lightning:button class="slds-button slds-button_neutral" label="Back" onclick="{!c.clickCancel}"/>
+    	</div>
+    </aura:if>
+</aura:component>

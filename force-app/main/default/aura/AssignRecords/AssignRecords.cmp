@@ -1,0 +1,86 @@
+<aura:component implements="force:lightningQuickAction,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId"  controller="WHJ_UserDeactivateCtrl">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="blnShowModule" type="boolean" default="false"/>
+    <aura:attribute name="buttonValue" type="String" default="IJMRecommended"/>
+    <aura:attribute name="ObjMessage" type="object" access="private"/>
+    <aura:attribute name="options" type="List" default="[{'label': 'Change Owner ', 'value': 'IJMRecommended'},
+                                                        ]"/>
+    <div class="slds-m-around--small slds-hide" aura:id="uiMessage">
+        <ui:message title="{!v.ObjMessage.title}" severity="{!v.ObjMessage.severity}" closable="{!v.ObjMessage.isClosable}">
+            <aura:unescapedHtml value="{!v.ObjMessage.message}"/>
+        </ui:message>
+    </div>
+    <aura:if isTrue="{!v.blnShowModule}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        
+                        <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{! c.closeModal }"
+                                              alternativeText="Close" class="slds-modal__close" />
+                        
+                       
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"></h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p>Are you sure?</p>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" action="{!c.closeModal}">Cancel</button>
+                        <lightning:button variant="brand" label="Please Select OK" title="" onclick="{! c.onClickConfirmDeactivate }"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+        
+    </aura:if>  
+    
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" aura:id="Modalbox" class="slds-modal"/>
+    <div  class="slds-p-around_medium">
+        <fieldset class="slds-box slds-theme--default slds-container--small">
+            <legend id="userform" class="slds-text-heading--small 
+                                         slds-p-vertical--medium">
+                
+            </legend>
+            <form class="slds-form--stacked">
+                <div class="slds-align_absolute-center">
+                    <lightning:radioGroup name="radioButtonGroup"
+                                          options="{! v.options }"
+                                          value="{! v.buttonValue }"
+                                          type="button"/>
+                </div>
+                <!-- <fieldset class="slds-form-element">
+                    <div class="slds-form-element__control  slds-align_absolute-center">
+                        <div class="slds-radio_button-group">
+                            <span class="slds-button slds-radio_button">
+                                <input type="radio" name="example-unique-name-99" id="example-unique-id-101" value="IJMRecommended" />
+                                <label class="slds-radio_button__label" for="example-unique-id-101">
+                                    <span class="slds-radio_faux">IJM Recommended</span>
+                                </label>
+                            </span>
+                            <span class="slds-button slds-radio_button">
+                                <input type="radio" name="example-unique-name-99" id="example-unique-id-102" value="NOTRecommended" />
+                                <label class="slds-radio_button__label" for="example-unique-id-102">
+                                    <span class="slds-radio_faux">Not Recommended</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                </fieldset>-->
+                <div class="slds-align_absolute-center">
+                    <lightning:button label="Cancel" 
+                                      class="slds-m-top--medium"
+                                      variant="neutral"
+                                      onclick="{!c.clickCancel}"/>
+                    
+                    <lightning:button label="Ok"  title = "OK"
+                                      class="slds-m-top--medium"
+                                      variant="brand"
+                                      onclick="{!c.clickOk}"/>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+</aura:component>

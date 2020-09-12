@@ -1,0 +1,337 @@
+<aura:component controller="TestClassGeneratorController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="listApexClass" type="List" />
+    <aura:attribute name="selectedClass" type="String"/>
+    <aura:attribute name="screenName" type="String" default="Class Select Screen" />
+    <aura:attribute name="TestClassCode" type="String" />
+    <aura:attribute name="apexMethodList" type="List" />
+    <aura:attribute name="suggestionList" type="List" />
+    <aura:attribute name="rows" type="Integer" default="10"/>
+    
+    <aura:attribute name="loaded" type="Boolean" default="false" />
+    
+    
+    <div class="exampleHolder">
+        <aura:if isTrue="{! v.loaded }">
+            <aura:if isTrue="{!v.screenName=='Class Select Screen'}">
+                <div class="slds-box" style="background:white;">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <center>
+                                
+                                <lightning:icon iconName="standard:bot" alternativeText="bot" title="bot" />
+                                <div class="slds-text-heading_medium">
+                                    Test Class Generator - "Hi Nemo"
+                                </div>
+                            </center>
+                            <br/>
+                            <div class="slds-text-heading_small">
+                                Select Apex Classs
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="around-small">
+                            <lightning:select name="ApexClass" label="Apex Class" required="true" value="{!v.selectedClass}">
+                                <option value="None" label="None"></option>
+                                <aura:iteration items="{!v.listApexClass}" var="class">
+                                    <option value="{!class.Name}" label="{!class.Name}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="around-small">
+                            
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small">
+                            <lightning:button variant="brand" label="Next" title="Next" disabled="{!v.selectedClass=='None'}" onclick="{! c.handleClick }" />
+                            
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+            </aura:if>
+            
+            
+            <aura:if isTrue="{!v.screenName=='Methods in Class'}">
+                
+                <lightning:layout multipleRows="true">
+                    
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <div class="slds-box" style="background:white;">
+                            
+                            <center>
+                        
+                                <lightning:icon iconName="standard:bot" alternativeText="bot" title="bot" />
+                                <div class="slds-text-heading_medium">
+                                    Test Class Generator - "Hi Nemo" 
+                                </div>
+                            </center>
+                            <br/>
+                            <div class="slds-text-heading_small">
+                                Test Class for &quot;{!v.selectedClass}&quot;
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <div  class="slds-box" style="background: rgba(215, 218, 233, 1); ">
+                            <p>
+                                <!--lightning:textarea readonly ="true"  aura:id="" value="{!v.TestClassCode}"  rows="50"    class="slds-text-body_medium"/-->
+                                
+                                <textarea class="slds-text-body_medium" id="listRichText" readonly="true" rows="{!v.rows}"  cols="180">
+                                    {!v.TestClassCode}
+                                </textarea>
+                            </p>
+                            
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <div class=" slds-box " style="background: white;">
+                            <div>
+                                <center>
+                                                     <img src="{!$Resource.TCGIllustrations + '/Illustrations/chatbot.gif'}" style="max-width: 80px;"/>
+                        
+                                    <b> Suggesstions by "Nemo"</b> </center> 
+                            </div>
+                            <div style="color: var(--lwc-colorTextLabel,rgb(62, 62, 60)">
+                                <br/>
+                                <ul class="slds-list_dotted slds-has-dividers_bottom-space">
+                                    <aura:iteration items="{!v.suggestionList}" var="suggestion">
+                                        <li class="slds-item">  {!suggestion}</li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="5" class="" padding="around-small">
+                        <div class=" slds-box " style="background: white;  width: fit-content;">
+                           
+                            <div class="slds-text-heading_small">
+                                <center><b>   Supported   Methods in Classs &quot;{!v.selectedClass}&quot;</b></center>
+                            </div>
+                            <br/>
+                            <!--table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Method Name">Method Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Static/Non-Static">Static/Non-Static</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Access Specifier">Access Specifier</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Return Type">Return Type</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Parameters">Parameters</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.apexMethodList}" var="method">
+                                        <aura:if isTrue="{!method.isMethodSupported}">
+                                            
+                                            <tr class="slds-hint-parent">
+                                                <th data-label="Method Name" scope="row">
+                                                    <div class="slds-truncate" title="">{!method.name}</div>
+                                                    
+                                                </th>
+                                                <td data-label="Static Non-Static">
+                                                    <div class="slds-truncate" title="">{!method.isStatic}</div>
+                                                </td>
+                                                <td data-label="Access Specifier">
+                                                    <div class="slds-truncate" title="">{!method.accessModifier}</div>
+                                                </td>
+                                                <td data-label="Return Type">
+                                                    <div class="slds-truncate" title="">{!method.returnType}</div>
+                                                </td>
+                                                <td data-label="Parameters">
+                                                    <div class="slds-truncate" title="">
+                                                        <aura:iteration items="{!method.params}" var="param">
+                                                            {!param.type}&nbsp;&nbsp;{!param.name}<br/>
+                                                        </aura:iteration>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </tbody>
+                            </table-->
+                                <lightning:layout multipleRows="true">
+                            
+                            <aura:iteration items="{!v.apexMethodList}" var="method" indexVar="index">
+                                <aura:if isTrue="{!method.isMethodSupported}">
+                                    
+                                    <lightning:layoutItem size="12"  padding="around-small">
+                                        
+                                        <div class="slds-box">
+                                            <h3 class="slds-tile__title slds-truncate" title="{!method.key}">
+                                                {!index+1} .      {!method.name}
+                                            </h3>
+                                            <div class="slds-tile__detail">
+                                                <dl class="slds-list_horizontal slds-wrap">
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Static/Non-Static">Static/Non-Static</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.isStatic}">{!method.isStatic}</dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Access Specifier">Access Specifier</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.accessModifier}">{!method.accessModifier}</dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Return Type">Return Type</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.returnType}">{!method.returnType}</dd>
+                                                    
+                                                    <!--dt class="slds-item_label slds-text-color_weak slds-truncate" title="Reference">Reference</dt>
+                                                       <dd class="slds-item_detail slds-truncate" title="{!item.reference}">{!item.reference}</dd-->
+                                                </dl>
+                                                <dl class="slds-list_horizontal slds-wrap">
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Parameters">Parameters</dt>
+                                                    
+                                                    <dd class="slds-item_detail slds-truncate" title="">                                                        
+                                                        <aura:iteration items="{!method.params}" var="param">
+                                                            {!param.type}&nbsp;&nbsp;{!param.name}<br/>
+                                                        </aura:iteration>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                            
+                                        </div>
+                                    </lightning:layoutItem>
+                                </aura:if>
+                            </aura:iteration>
+                        </lightning:layout>
+                        </div>
+                    
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="2" padding="around-small"></lightning:layoutItem>
+                    <lightning:layoutItem size="5" padding="around-small">
+                        <div class=" slds-box " style="background: white; width: fit-content;" >
+                            
+                            <div class="slds-text-heading_small">
+                                <center><b>   Unsupported   Methods in Classs &quot;{!v.selectedClass}&quot;</b></center>
+                            </div>
+                            <br/>
+                            <!--table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Method Name">Method Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Static/Non-Static">Static/Non-Static</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Access Specifier">Access Specifier</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Return Type">Return Type</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Parameters">Parameters</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.apexMethodList}" var="method">
+                                        <aura:if isTrue="{!!method.isMethodSupported}">
+                                            
+                                            <tr class="slds-hint-parent">
+                                                <th data-label="Method Name" scope="row">
+                                                    <div class="slds-truncate" title="">{!method.name}</div>
+                                                    
+                                                </th>
+                                                <td data-label="Static Non-Static">
+                                                    <div class="slds-truncate" title="">{!method.isStatic}</div>
+                                                </td>
+                                                <td data-label="Access Specifier">
+                                                    <div class="slds-truncate" title="">{!method.accessModifier}</div>
+                                                </td>
+                                                <td data-label="Return Type">
+                                                    <div class="slds-truncate" title="">{!method.returnType}</div>
+                                                </td>
+                                                <td data-label="Parameters">
+                                                    <div class="slds-truncate" title="">
+                                                        <aura:iteration items="{!method.params}" var="param">
+                                                            {!param.type}&nbsp;&nbsp;{!param.name}<br/>
+                                                        </aura:iteration>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </tbody>
+                            </table-->
+                                                    <lightning:layout multipleRows="true">
+                            
+                            <aura:iteration items="{!v.apexMethodList}" var="method" indexVar="index">
+                                <aura:if isTrue="{!!method.isMethodSupported}">
+                                    
+                                    <lightning:layoutItem size="12"  padding="around-small">
+                                        
+                                        <div class="slds-box">
+                                            <h3 class="slds-tile__title slds-truncate" title="{!method.key}">
+                                                {!index+1} .      {!method.name}
+                                            </h3>
+                                            <div class="slds-tile__detail">
+                                                <dl class="slds-list_horizontal slds-wrap">
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Static/Non-Static">Static/Non-Static</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.isStatic}">{!method.isStatic}</dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Access Specifier">Access Specifier</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.accessModifier}">{!method.accessModifier}</dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Parameters">Parameters</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="">                                                        
+                                                        <aura:iteration items="{!method.params}" var="param">
+                                                            {!param.type}&nbsp;&nbsp;{!param.name}<br/>
+                                                        </aura:iteration>
+                                                    </dd>
+                                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Return Type">Return Type</dt>
+                                                    <dd class="slds-item_detail slds-truncate" title="{!method.returnType}">{!method.returnType}</dd>
+                                                    
+                                                    <!--dt class="slds-item_label slds-text-color_weak slds-truncate" title="Reference">Reference</dt>
+                                                       <dd class="slds-item_detail slds-truncate" title="{!item.reference}">{!item.reference}</dd-->
+                                                </dl>
+                                            </div>
+                                            
+                                        </div>
+                                    </lightning:layoutItem>
+                                </aura:if>
+                            </aura:iteration>
+                        </lightning:layout>
+                        </div>
+
+                    </lightning:layoutItem>
+                    
+                    <lightning:layoutItem size = "12" padding="around-small">
+                        <lightning:button variant="brand" label="Back" title="Back"  onclick="{! c.refresh }" />
+                        
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:if>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.screenName=='Class Select Screen'}">
+                    
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:if>
+                <aura:if isTrue="{!v.screenName=='Methods in Class'}">
+                    
+                    <article class="slds-card slds-box">
+                        <center>
+                            <div id="form-j_idt95" class="ui-outputpanel ui-widget">
+                                <img src="{!$Resource.TCGIllustrations + '/Illustrations/job-in-progress.gif'}" style="max-width: 400px;"/>
+                                <p class="slds-m-top--large slds-text-heading_medium">
+                                    "Nemo" is analyzing your classs and creating Test Class for you.
+                                </p>
+                                <p class="slds-text-body_regular">
+                                    It might take few minutes to complete depending on code of your class. <br/>Meanwhile sit back and have a cup of Coffee.
+                                </p>
+                            </div>
+                        </center>
+                    </article>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </div>
+    
+    
+    
+    
+    
+</aura:component>

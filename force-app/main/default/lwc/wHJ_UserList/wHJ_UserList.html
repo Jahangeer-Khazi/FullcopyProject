@@ -1,0 +1,163 @@
+<!--
+@File Name          : wHJ_UserList.html
+@Description        : 
+@Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+@Group              : 
+@Last Modified By   : Harsh Gughane
+@Last Modified On   : 4/6/2020, 12:28:20 PM
+@Modification Log   : 
+Ver       Date            Author      		    Modification
+1.0    10/23/2019   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<template>
+    <!--    <lightning-card title="My Team Rostering Status" icon-name="custom:custom63">
+
+                <div class="slds-m-around_medium">
+                    <template if:true={users.data}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={users.data}
+                            columns={columns}
+                            onsave={handleSave}
+                            draft-values={draftValues}>
+                            >
+                        </lightning-datatable>
+                    </template>
+                    <template if:true={users.error}>
+                        </template>
+                    </div>
+            </lightning-card>-->
+        
+            <!--lightning datatable-->
+            <lightning-card title="My Team Availability" icon-name="custom:custom63">            
+<template if:true={users.data}>
+   <lightning-datatable 
+   key-field="id"
+   data={users.data}
+   onrowaction={handleRowAction}
+   row-number-offset={rowOffset}
+   hide-checkbox-column="true"
+   columns={columns}></lightning-datatable>
+</template>      
+
+<!-- Detail view modal start -->
+<template if:true={bShowModal}>  
+    
+<section role="dialog" tabindex="-1"
+       aria-labelledby="modal-heading-01"
+       aria-modal="true"
+       aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open">
+ <div class="slds-modal__container"  >
+    <!-- modal header start -->
+
+    <header class="slds-modal__header">
+       <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+          <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+       </button>
+       <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Record Detail</h2>
+    </header>
+    <!-- modal body start -->
+    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height: 200px;">
+      <dl class="slds-list_horizontal slds-wrap" >
+         <dd>
+            <legend class="slds-form-element__legend slds-form-element__label">Status</legend>
+                <template if:true={statusValues.data}>
+                        <lightning-combobox name="status"
+                                            value={statusValue}
+                                            placeholder={status}
+                                            options={statusValues.data.values}
+                                            onchange={handleChange}
+                                             >
+                                             
+                      
+                      </lightning-combobox>
+                </template>
+         </dd>
+        
+            <dd class="slds-m-left--xx-large">
+               <legend class="slds-form-element__legend slds-form-element__label ">Shift</legend>
+                   <template if:true={statusValues.data}>
+                           <lightning-combobox name="shifts"
+                                               value={shiftsValue}
+                                               placeholder={shifts}
+                                               options={shiftsValues.data.values}
+                                               onchange={handleChange}
+                                                >
+                                                
+                         
+                         </lightning-combobox>
+                   </template>
+            </dd>
+        <!--  <dd class="slds-item_detail slds-truncate">{user.Call_Availability_Status__c}</dd>-->
+        <dd class="slds-m-left_x-large">
+            <legend class="slds-form-element__legend slds-form-element__label">Manager Availability</legend>
+                <template if:true={callAvailabilities.data}>
+                    <lightning-combobox name="mgr"
+                    
+                                            value={callAvailability}
+                                            placeholder={ManagerAvailabiity}
+                                            options={callAvailabilities.data.values}
+                                            onchange={handleChange}
+                                             >
+                      </lightning-combobox>
+                </template>
+         </dd>
+         
+        <!--dd>
+                <template if:true={salesRegions.data}>
+                        <lightning-combobox name="sales"
+                        label="Sales Region"
+                                            value={salesRegion}
+                                            placeholder={Region}
+                                            options={salesRegions.data.values}
+                                            onchange={handleChange}
+                                             >
+                                             
+                      
+                      </lightning-combobox>
+                </template>
+         </dd-->
+         <dd class="slds-p-top_medium  slds-m-left--xx-large">
+            <legend class="slds-form-element__legend slds-form-element__label">Sales Region</legend>
+            <template if:true={salesRegions.data}>
+            <lightning-dual-listbox 
+            name="sales"
+            source-label="Available"
+            selected-label="Selected"
+            options={salesRegions.data.values}
+            value={defaultOptions}
+            onchange={handleChange}
+            min="1"
+            field-level-help ="Select at least 1 region."
+            message-when-range-underflow = "Select at least 1 region.">
+            
+        </lightning-dual-listbox>
+           </template>
+            
+           </dd>
+         
+    </dl>
+    </div>
+    <!-- modal footer start-->
+    
+    <footer class="slds-modal__footer">
+            <lightning-button variant="brand"
+            label="Save"
+            title="Save"
+            onclick={handleSave}
+            ></lightning-button> 
+        <lightning-button variant="brand"
+         label="Close"
+         title="Close"
+         onclick={closeModal}
+         class="slds-m-left_x-small"
+         ></lightning-button>
+    </footer>
+ </div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+</lightning-card>
+<!-- Detail view modal end -->
+</template>
